@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Members Management | Central City Library</title>
+  <link rel="stylesheet" href="/css/global.css">
+  <link rel="stylesheet" href="/css/dashboard.css">
+  <link rel="stylesheet" href="/css/forms.css">
+  <link rel="stylesheet" href="/css/tables.css">
+  <link rel="stylesheet" href="/css/responsive.css">
+</head>
+<body>
+  <div class="app-layout">
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="brand-icon">📚</div>
+        <div class="brand-text">CityLibrary OS</div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="nav-category">Main Menu</div>
+        <a href="/dashboard.html" class="nav-link">
+          <span class="nav-icon">📊</span> Dashboard
+        </a>
+        <a href="/books.html" class="nav-link">
+          <span class="nav-icon">📚</span> Books Catalog
+        </a>
+        <a href="/members.html" class="nav-link active">
+          <span class="nav-icon">👥</span> Members
+        </a>
+
+        <div class="nav-category">Operations</div>
+        <a href="/qr.html" class="nav-link">
+          <span class="nav-icon">📱</span> Generate QR
+        </a>
+        <a href="/rentals.html" class="nav-link">
+          <span class="nav-icon">📖</span> Active Rentals
+        </a>
+        <a href="/transactions.html" class="nav-link">
+          <span class="nav-icon">💳</span> Transactions
+        </a>
+
+        <div class="nav-category">Configuration</div>
+        <a href="/settings.html" class="nav-link">
+          <span class="nav-icon">⚙️</span> Settings & UPI
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <button id="logout-btn" class="btn btn-secondary" style="width: 100%;">
+          🚪 Sign Out
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <div class="main-wrapper">
+      <header class="topbar">
+        <div class="topbar-left">
+          <button id="mobile-nav-toggle" class="mobile-nav-toggle" aria-label="Toggle Navigation">☰</button>
+          <h1 class="page-header-title">Registered Members & Patrons</h1>
+        </div>
+        <div class="topbar-right">
+          <div class="admin-profile-pill">
+            <div id="admin-avatar-initial" class="admin-avatar">A</div>
+            <span id="admin-email-display" class="admin-email-text">admin@library.org</span>
+          </div>
+        </div>
+      </header>
+
+      <main class="content-body">
+        <div class="table-toolbar">
+          <div class="table-toolbar-left">
+            <div class="search-wrapper" style="flex: 1;">
+              <span class="search-icon">🔍</span>
+              <input type="text" id="member-search" class="form-control search-input" placeholder="Search members by name, phone, email, or Member ID..." />
+            </div>
+          </div>
+        </div>
+
+        <div class="table-container">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Member ID</th>
+                <th>Name & Address</th>
+                <th>Phone</th>
+                <th>Email</th>
+                <th>Active Rentals</th>
+                <th>Total History</th>
+                <th>Profile</th>
+              </tr>
+            </thead>
+            <tbody id="members-tbody">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+
+          <div class="pagination-wrapper">
+            <div id="pagination-info" class="pagination-info">Loading members...</div>
+            <div class="pagination-controls">
+              <button id="prev-page-btn" class="pagination-btn" disabled>← Previous</button>
+              <span id="page-indicator" class="pagination-page-indicator">Page 1</span>
+              <button id="next-page-btn" class="pagination-btn" disabled>Next →</button>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Detailed Member Profile Modal -->
+  <div id="member-profile-modal" class="modal-backdrop">
+    <div class="modal-content" style="max-width: 700px;">
+      <div class="modal-header">
+        <h3 class="modal-title">Member Profile</h3>
+        <button type="button" class="modal-close" onclick="closeModal('member-profile-modal')">×</button>
+      </div>
+
+      <div class="modal-body">
+        <!-- Personal Information Card -->
+        <div style="background: var(--bg-subtle); border-radius: var(--radius-lg); padding: 1.25rem; margin-bottom: 1.5rem;">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.75rem;">
+            <div>
+              <h2 id="prof-name" style="font-size: 1.35rem; color: var(--text-primary);">—</h2>
+              <span id="prof-id" class="badge badge-primary" style="margin-top: 0.25rem;">—</span>
+            </div>
+            <div style="font-size: 0.8125rem; color: var(--text-muted);">
+              Joined: <strong id="prof-joined">—</strong>
+            </div>
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; font-size: 0.875rem;">
+            <div>📱 Phone: <span id="prof-phone" style="font-weight: 600;">—</span></div>
+            <div>✉️ Email: <span id="prof-email" style="font-weight: 600;">—</span></div>
+            <div style="grid-column: span 2;">📍 Address: <span id="prof-address" style="color: var(--text-secondary);">—</span></div>
+          </div>
+        </div>
+
+        <!-- Lending Statistics Matrix -->
+        <h4 style="margin-bottom: 0.75rem;">Lending Activity Matrix</h4>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 0.75rem; margin-bottom: 1.5rem;">
+          <div style="background: var(--bg-surface); border: 1px solid var(--border-subtle); padding: 0.75rem; border-radius: var(--radius-md); text-align: center;">
+            <div style="font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase;">Total Trans.</div>
+            <div id="prof-stat-total-tx" style="font-size: 1.25rem; font-weight: 800;">0</div>
+          </div>
+          <div style="background: var(--bg-surface); border: 1px solid var(--border-subtle); padding: 0.75rem; border-radius: var(--radius-md); text-align: center;">
+            <div style="font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase;">Bought</div>
+            <div id="prof-stat-bought" style="font-size: 1.25rem; font-weight: 800;">0</div>
+          </div>
+          <div style="background: var(--bg-surface); border: 1px solid var(--border-subtle); padding: 0.75rem; border-radius: var(--radius-md); text-align: center;">
+            <div style="font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase;">Rented</div>
+            <div id="prof-stat-rented" style="font-size: 1.25rem; font-weight: 800;">0</div>
+          </div>
+          <div style="background: var(--bg-surface); border: 1px solid var(--border-subtle); padding: 0.75rem; border-radius: var(--radius-md); text-align: center;">
+            <div style="font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase;">Active</div>
+            <div id="prof-stat-active" style="font-size: 1.25rem; font-weight: 800; color: var(--primary);">0</div>
+          </div>
+          <div style="background: var(--bg-surface); border: 1px solid var(--border-subtle); padding: 0.75rem; border-radius: var(--radius-md); text-align: center;">
+            <div style="font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase;">Returned</div>
+            <div id="prof-stat-returned" style="font-size: 1.25rem; font-weight: 800; color: var(--success);">0</div>
+          </div>
+          <div style="background: var(--bg-surface); border: 1px solid var(--border-subtle); padding: 0.75rem; border-radius: var(--radius-md); text-align: center;">
+            <div style="font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase;">Overdue</div>
+            <div id="prof-stat-overdue" style="font-size: 1.25rem; font-weight: 800; color: var(--danger);">0</div>
+          </div>
+          <div style="background: var(--bg-surface); border: 1px solid var(--border-subtle); padding: 0.75rem; border-radius: var(--radius-md); text-align: center;">
+            <div style="font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase;">Total Spent</div>
+            <div id="prof-stat-spent" style="font-size: 1.25rem; font-weight: 800; color: var(--success);">₹0</div>
+          </div>
+        </div>
+
+        <!-- Lending History Table -->
+        <h4 style="margin-bottom: 0.75rem;">Member Transaction History</h4>
+        <div class="table-container" style="max-height: 250px; overflow-y: auto;">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Tx ID</th>
+                <th>Book</th>
+                <th>Type</th>
+                <th>Amount</th>
+                <th>Date</th>
+              </tr>
+            </thead>
+            <tbody id="prof-tx-tbody">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" onclick="closeModal('member-profile-modal')">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div id="toast-container"></div>
+
+  <!-- Scripts -->
+  <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-auth-compat.js"></script>
+  <script src="/js/firebase-config.js"></script>
+  <script src="/js/utils.js"></script>
+  <script src="/js/api.js"></script>
+  <script src="/js/guards.js"></script>
+  <script src="/js/members.js"></script>
+</body>
+</html>

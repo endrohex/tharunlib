@@ -1,0 +1,140 @@
+/* ==========================================================================
+   RESPONSIVE DESIGN & PRINT STYLES
+   ========================================================================== */
+
+/* Tablet & Mobile Adjustments */
+@media (max-width: 1024px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .app-layout {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: -280px;
+    bottom: 0;
+    width: 280px;
+    z-index: 100;
+    transition: left var(--transition-normal);
+  }
+
+  .sidebar.mobile-open {
+    left: 0;
+    box-shadow: var(--shadow-xl);
+  }
+
+  .sidebar-backdrop {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.5);
+    z-index: 90;
+    backdrop-filter: blur(2px);
+  }
+
+  .sidebar-backdrop.active {
+    display: block;
+  }
+
+  .mobile-nav-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .topbar {
+    padding: 0.875rem 1rem;
+  }
+
+  .topbar-right .admin-email-text {
+    display: none;
+  }
+
+  .content-body {
+    padding: 1.25rem 1rem;
+  }
+
+  .quick-action-banner {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.25rem;
+    padding: 1.5rem;
+  }
+
+  .table-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .table-toolbar-left,
+  .table-toolbar-right {
+    width: 100%;
+  }
+
+  /* Customer Mobile Registration Specific Styling */
+  .mobile-reg-container {
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 1rem;
+  }
+
+  .mobile-book-card {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    padding: 1rem;
+    background: var(--bg-surface);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border-subtle);
+    margin-bottom: 1.25rem;
+  }
+
+  .mobile-book-cover {
+    width: 70px;
+    height: 98px;
+    border-radius: var(--radius-sm);
+    object-fit: cover;
+    box-shadow: var(--shadow-sm);
+    flex-shrink: 0;
+  }
+}
+
+/* ==========================================================================
+   PRINT MEDIA STYLES (Receipts)
+   ========================================================================== */
+@media print {
+  body {
+    background: white !important;
+    color: black !important;
+  }
+
+  .sidebar,
+  .topbar,
+  .btn,
+  .no-print,
+  #toast-container {
+    display: none !important;
+  }
+
+  .main-wrapper,
+  .content-body {
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  .receipt-container {
+    max-width: 480px !important;
+    margin: 0 auto !important;
+    border: 1px dashed #94a3b8 !important;
+    box-shadow: none !important;
+    padding: 2rem !important;
+    page-break-inside: avoid;
+  }
+}

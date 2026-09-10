@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard | Central City Library</title>
+  <link rel="stylesheet" href="/css/global.css">
+  <link rel="stylesheet" href="/css/dashboard.css">
+  <link rel="stylesheet" href="/css/forms.css">
+  <link rel="stylesheet" href="/css/tables.css">
+  <link rel="stylesheet" href="/css/responsive.css">
+</head>
+<body>
+  <div class="app-layout">
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="brand-icon">📚</div>
+        <div class="brand-text">CityLibrary OS</div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="nav-category">Main Menu</div>
+        <a href="/dashboard.html" class="nav-link active">
+          <span class="nav-icon">📊</span> Dashboard
+        </a>
+        <a href="/books.html" class="nav-link">
+          <span class="nav-icon">📚</span> Books Catalog
+        </a>
+        <a href="/members.html" class="nav-link">
+          <span class="nav-icon">👥</span> Members
+        </a>
+
+        <div class="nav-category">Operations</div>
+        <a href="/qr.html" class="nav-link">
+          <span class="nav-icon">📱</span> Generate QR
+        </a>
+        <a href="/rentals.html" class="nav-link">
+          <span class="nav-icon">📖</span> Active Rentals
+        </a>
+        <a href="/transactions.html" class="nav-link">
+          <span class="nav-icon">💳</span> Transactions
+        </a>
+
+        <div class="nav-category">Configuration</div>
+        <a href="/settings.html" class="nav-link">
+          <span class="nav-icon">⚙️</span> Settings & UPI
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <button id="logout-btn" class="btn btn-secondary" style="width: 100%;">
+          🚪 Sign Out
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <div class="main-wrapper">
+      <!-- Topbar Header -->
+      <header class="topbar">
+        <div class="topbar-left">
+          <button id="mobile-nav-toggle" class="mobile-nav-toggle" aria-label="Toggle Navigation">
+            ☰
+          </button>
+          <h1 class="page-header-title">Dashboard Overview</h1>
+        </div>
+
+        <div class="topbar-right">
+          <!-- Live Real-Time Pulse -->
+          <div class="live-sync-pill" title="Synchronizing with server every 5 seconds">
+            <span class="live-pulse-dot"></span>
+            <span>Live Sync Active</span>
+          </div>
+
+          <div class="admin-profile-pill">
+            <div id="admin-avatar-initial" class="admin-avatar">A</div>
+            <span id="admin-email-display" class="admin-email-text">admin@library.org</span>
+          </div>
+        </div>
+      </header>
+
+      <!-- Content Body -->
+      <main class="content-body">
+        <!-- Quick Action Hero Banner -->
+        <div class="quick-action-banner">
+          <div>
+            <h2 class="quick-action-title">Instant QR Book Lending</h2>
+            <p class="quick-action-sub">Select a book and issue a dynamic registration QR. Customers can scan on their phone and borrow in under 10 seconds.</p>
+          </div>
+          <a href="/qr.html" class="btn btn-lg btn-secondary" style="font-weight: 700;">
+            ⚡ Generate Lending QR →
+          </a>
+        </div>
+
+        <!-- 7 Key Overview Metrics Cards -->
+        <div class="metrics-grid">
+          <div class="metric-card">
+            <div class="metric-info">
+              <span class="metric-label">Total Titles</span>
+              <span id="stat-total-books" class="metric-value">0</span>
+              <span class="metric-sub">Catalog inventory</span>
+            </div>
+            <div class="metric-icon-box icon-books">📚</div>
+          </div>
+
+          <div class="metric-card">
+            <div class="metric-info">
+              <span class="metric-label">Available Copies</span>
+              <span id="stat-available-copies" class="metric-value">0</span>
+              <span class="metric-sub">Ready to lend</span>
+            </div>
+            <div class="metric-icon-box icon-copies">📦</div>
+          </div>
+
+          <div class="metric-card">
+            <div class="metric-info">
+              <span class="metric-label">Total Members</span>
+              <span id="stat-total-members" class="metric-value">0</span>
+              <span class="metric-sub">Registered patrons</span>
+            </div>
+            <div class="metric-icon-box icon-members">👥</div>
+          </div>
+
+          <div class="metric-card">
+            <div class="metric-info">
+              <span class="metric-label">Active Rentals</span>
+              <span id="stat-active-rentals" class="metric-value">0</span>
+              <span class="metric-sub">Currently with members</span>
+            </div>
+            <div class="metric-icon-box icon-rentals">📖</div>
+          </div>
+
+          <div class="metric-card">
+            <div class="metric-info">
+              <span class="metric-label">Overdue Books</span>
+              <span id="stat-overdue-rentals" class="metric-value">0</span>
+              <span class="metric-sub">Requires attention</span>
+            </div>
+            <div class="metric-icon-box icon-overdue">⚠️</div>
+          </div>
+
+          <div class="metric-card">
+            <div class="metric-info">
+              <span class="metric-label">Today's Transactions</span>
+              <span id="stat-today-tx" class="metric-value">0</span>
+              <span class="metric-sub">Activity today</span>
+            </div>
+            <div class="metric-icon-box icon-revenue">⚡</div>
+          </div>
+
+          <div class="metric-card">
+            <div class="metric-info">
+              <span class="metric-label">Total Revenue</span>
+              <span id="stat-total-revenue" class="metric-value">₹0</span>
+              <span class="metric-sub">All-time collected</span>
+            </div>
+            <div class="metric-icon-box icon-revenue">💰</div>
+          </div>
+        </div>
+
+        <!-- Two-Column Operational Grid -->
+        <div class="dashboard-grid">
+          <!-- Recent Transactions Live Feed -->
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">Live Transaction Feed</h3>
+              <a href="/transactions.html" class="btn btn-sm btn-outline">View All Transactions →</a>
+            </div>
+            <div class="table-container" style="border: none; box-shadow: none;">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Customer</th>
+                    <th>Book</th>
+                    <th>Type</th>
+                    <th>Amount</th>
+                    <th>Date & Time</th>
+                  </tr>
+                </thead>
+                <tbody id="recent-tx-tbody">
+                  <!-- Dynamically populated -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Alerts & Attention Column -->
+          <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+            <!-- Low Inventory Alert Card -->
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">Low Stock Alert (≤ 2 Copies)</h3>
+                <a href="/books.html" class="btn btn-sm btn-outline">Manage</a>
+              </div>
+              <div id="low-stock-list" style="padding: 0.5rem 0;">
+                <!-- Dynamically populated -->
+              </div>
+            </div>
+
+            <!-- Overdue Attention Card -->
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">Overdue Rentals</h3>
+                <a href="/rentals.html" class="btn btn-sm btn-outline">Review</a>
+              </div>
+              <div id="overdue-list-widget" style="padding: 0.5rem 0;">
+                <!-- Dynamically populated -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div id="toast-container"></div>
+
+  <!-- Scripts -->
+  <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-auth-compat.js"></script>
+  <script src="/js/firebase-config.js"></script>
+  <script src="/js/utils.js"></script>
+  <script src="/js/api.js"></script>
+  <script src="/js/guards.js"></script>
+  <script src="/js/dashboard.js"></script>
+</body>
+</html>

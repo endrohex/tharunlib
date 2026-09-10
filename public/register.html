@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Book Registration | Central City Library</title>
+  <link rel="stylesheet" href="/css/global.css">
+  <link rel="stylesheet" href="/css/forms.css">
+  <link rel="stylesheet" href="/css/responsive.css">
+  <style>
+    body {
+      background-color: #f1f5f9;
+      padding: 1rem 0 3rem 0;
+    }
+    .mobile-card {
+      background: white;
+      border-radius: var(--radius-xl);
+      border: 1px solid var(--border-subtle);
+      box-shadow: var(--shadow-md);
+      overflow: hidden;
+      margin-bottom: 1.25rem;
+    }
+    .mobile-header {
+      background: linear-gradient(135deg, #4338ca 0%, #312e81 100%);
+      color: white;
+      padding: 1.5rem;
+      text-align: center;
+    }
+    .mobile-header h1 {
+      color: white;
+      font-size: 1.35rem;
+      margin-bottom: 0.25rem;
+    }
+    .mobile-header p {
+      color: #c7d2fe;
+      font-size: 0.8125rem;
+    }
+    .book-summary-box {
+      display: flex;
+      gap: 1rem;
+      padding: 1.25rem;
+      border-bottom: 1px solid var(--border-subtle);
+      background: #fafafa;
+      align-items: center;
+    }
+    .book-thumb {
+      width: 75px;
+      height: 105px;
+      border-radius: var(--radius-sm);
+      object-fit: cover;
+      box-shadow: var(--shadow-sm);
+      flex-shrink: 0;
+    }
+    .upi-box {
+      background: #f8fafc;
+      border: 2px dashed var(--border-medium);
+      border-radius: var(--radius-lg);
+      padding: 1.25rem;
+      margin-bottom: 1.25rem;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="mobile-reg-container">
+    <!-- Loading State -->
+    <div id="reg-loading" style="text-align: center; padding: 4rem 1rem;">
+      <div class="skeleton" style="width: 60px; height: 60px; border-radius: 50%; margin: 0 auto 1.5rem auto;"></div>
+      <div class="skeleton" style="height: 24px; max-width: 250px; margin: 0 auto 0.75rem auto;"></div>
+      <div class="skeleton" style="height: 16px; max-width: 180px; margin: 0 auto;"></div>
+      <p style="margin-top: 1.5rem; color: var(--text-muted); font-size: 0.875rem;">Verifying registration session...</p>
+    </div>
+
+    <!-- Error State -->
+    <div id="reg-error" style="display: none; text-align: center; padding: 3rem 1.5rem; background: white; border-radius: var(--radius-xl); box-shadow: var(--shadow-md);">
+      <div style="font-size: 3rem; margin-bottom: 1rem;">⚠️</div>
+      <h2 style="font-size: 1.35rem; margin-bottom: 0.75rem;">Session Expired or Invalid</h2>
+      <p id="reg-error-message" style="font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 1.5rem;">
+        This registration QR has expired. Please ask the library staff for a new QR code.
+      </p>
+      <a href="/" class="btn btn-secondary">Return to Library Home</a>
+    </div>
+
+    <!-- Main Registration Form Container -->
+    <div id="reg-form-container" style="display: none;">
+      <div class="mobile-card">
+        <!-- Header -->
+        <div class="mobile-header">
+          <div style="font-size: 1.75rem; margin-bottom: 0.5rem;">📚</div>
+          <h1 id="library-name-display">Central City Library</h1>
+          <p>Instant Book Lending & Purchase Registration</p>
+        </div>
+
+        <!-- Book & Transaction Summary -->
+        <div class="book-summary-box">
+          <img id="book-cover-img" src="" alt="Cover" class="book-thumb" />
+          <div style="flex: 1;">
+            <div style="display: flex; gap: 0.5rem; margin-bottom: 0.375rem;">
+              <span id="trans-type-badge" class="badge badge-primary">RENT</span>
+              <span id="rental-duration-display" class="badge badge-neutral" style="display: none;">7 Days</span>
+            </div>
+            <h3 id="book-title-display" style="font-size: 1.05rem; font-weight: 700; line-height: 1.25;">Book Title</h3>
+            <p id="book-author-display" style="font-size: 0.8125rem; color: var(--text-muted); margin-bottom: 0.5rem;">Author Name</p>
+            <div style="font-size: 0.875rem; font-weight: 700; color: var(--primary);">
+              Amount: <span id="trans-amount-display">₹0</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Registration Form -->
+        <form id="registration-form" style="padding: 1.5rem;">
+          <h4 style="margin-bottom: 1.25rem; font-size: 1rem;">Patron Details</h4>
+
+          <div class="form-group">
+            <label class="form-label">Full Name <span class="required">*</span></label>
+            <input type="text" id="customer-name" class="form-control" placeholder="e.g. Rahul Sharma" required />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Phone Number <span class="required">*</span></label>
+            <input type="tel" id="customer-phone" class="form-control" placeholder="e.g. 9876543210" required />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Email Address (Optional)</label>
+            <input type="email" id="customer-email" class="form-control" placeholder="rahul@example.com" />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Address / College ID (Optional)</label>
+            <input type="text" id="customer-address" class="form-control" placeholder="e.g. Room 204, Campus Hostel" />
+          </div>
+
+          <!-- Optional UPI Payment Box -->
+          <div id="upi-payment-section" class="upi-box" style="display: none;">
+            <h4 style="font-size: 0.95rem; margin-bottom: 0.375rem;">💳 Optional UPI Payment</h4>
+            <p style="font-size: 0.8125rem; color: var(--text-muted); margin-bottom: 1rem;">
+              Pay <strong id="upi-amount-val">₹0</strong> securely via any UPI app
+            </p>
+
+            <div style="display: flex; gap: 0.5rem; justify-content: center; margin-bottom: 1rem;">
+              <a id="upi-pay-deep-link" href="#" class="btn btn-primary btn-sm">
+                Pay via UPI App ↗
+              </a>
+              <button type="button" id="toggle-upi-qr-btn" class="btn btn-secondary btn-sm">
+                Show UPI QR
+              </button>
+            </div>
+
+            <!-- Dynamic or Uploaded UPI QR Display -->
+            <div id="upi-qr-display-box" style="display: none; padding: 1rem; background: white; border-radius: var(--radius-md); margin-bottom: 1rem;">
+              <img id="upi-qr-img" src="" alt="UPI QR" style="max-width: 180px; margin: 0 auto; display: block;" />
+              <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.5rem;">Scan with Google Pay, PhonePe, or Paytm</p>
+            </div>
+
+            <div class="form-group" style="text-align: left; margin-bottom: 0;">
+              <label class="form-label" style="font-size: 0.75rem;">UPI Reference / UTR Number (Optional)</label>
+              <input type="text" id="customer-utr" class="form-control" placeholder="e.g. 4239XXXXXXXX" />
+            </div>
+          </div>
+
+          <!-- Confirmation Checkbox -->
+          <div class="form-check" style="margin-bottom: 1.5rem;">
+            <input type="checkbox" id="confirm-checkbox" required checked />
+            <label for="confirm-checkbox">
+              I confirm that the information provided is correct and I agree to return the book on or before the due date.
+            </label>
+          </div>
+
+          <button type="submit" id="submit-reg-btn" class="btn btn-primary btn-lg" style="width: 100%; font-size: 1.05rem;">
+            ✓ Save & Complete Registration
+          </button>
+        </form>
+      </div>
+
+      <div style="text-align: center; font-size: 0.75rem; color: var(--text-muted); padding: 0 1rem;">
+        Your information is securely encrypted and stored directly with the library.
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div id="toast-container"></div>
+
+  <!-- Vendor QRCode library (for dynamic UPI QR generation if needed) -->
+  <script src="/assets/vendor/qrcode.min.js"></script>
+  <script src="/js/utils.js"></script>
+  <script src="/js/register.js"></script>
+</body>
+</html>

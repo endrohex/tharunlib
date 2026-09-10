@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Registration Confirmation | Central City Library</title>
+  <link rel="stylesheet" href="/css/global.css">
+  <link rel="stylesheet" href="/css/responsive.css">
+  <style>
+    body {
+      background: #f8fafc;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+    }
+    .confirmation-card {
+      background: white;
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-xl);
+      border: 1px solid var(--border-subtle);
+      width: 100%;
+      max-width: 480px;
+      padding: 2.5rem 2rem;
+      text-align: center;
+    }
+    .success-icon-bubble {
+      width: 68px;
+      height: 68px;
+      border-radius: 50%;
+      background: var(--success-light);
+      color: var(--success);
+      border: 2px solid var(--success-border);
+      font-size: 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1.25rem auto;
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+    }
+    .receipt-box {
+      background: var(--bg-subtle);
+      border: 1px dashed var(--border-medium);
+      border-radius: var(--radius-lg);
+      padding: 1.25rem;
+      text-align: left;
+      font-size: 0.875rem;
+      margin: 1.5rem 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.625rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="confirmation-card">
+    <div class="success-icon-bubble">✓</div>
+    <h1 style="font-size: 1.5rem; font-weight: 800; margin-bottom: 0.25rem;">Registration Successful!</h1>
+    <p style="font-size: 0.875rem; color: var(--text-secondary);">Your book lending has been registered with the library.</p>
+
+    <!-- Receipt Details -->
+    <div class="receipt-box">
+      <div style="display: flex; justify-content: space-between; border-bottom: 1px solid var(--border-subtle); padding-bottom: 0.5rem;">
+        <span style="color: var(--text-muted);">Transaction ID:</span>
+        <strong id="succ-tx-id" style="color: var(--primary);">—</strong>
+      </div>
+      <div style="display: flex; justify-content: space-between;">
+        <span style="color: var(--text-muted);">Patron:</span>
+        <strong id="succ-customer">—</strong>
+      </div>
+      <div style="display: flex; justify-content: space-between;">
+        <span style="color: var(--text-muted);">Book:</span>
+        <strong id="succ-book">—</strong>
+      </div>
+      <div style="display: flex; justify-content: space-between;">
+        <span style="color: var(--text-muted);">Lending Type:</span>
+        <span id="succ-type" class="badge badge-primary">RENT</span>
+      </div>
+      <div id="succ-duration-row" style="display: flex; justify-content: space-between;">
+        <span style="color: var(--text-muted);">Duration:</span>
+        <span id="succ-duration">—</span>
+      </div>
+      <div id="succ-due-row" style="display: flex; justify-content: space-between;">
+        <span style="color: var(--text-muted);">Return Due Date:</span>
+        <strong id="succ-due" style="color: var(--danger);">—</strong>
+      </div>
+      <div style="display: flex; justify-content: space-between; border-top: 1px solid var(--border-subtle); padding-top: 0.5rem;">
+        <span style="font-weight: 700;">Total Amount:</span>
+        <strong id="succ-amount" style="font-size: 1.1rem; color: var(--text-primary);">₹0</strong>
+      </div>
+      <div style="display: flex; justify-content: space-between;">
+        <span style="color: var(--text-muted);">Payment:</span>
+        <span id="succ-payment-status" class="badge badge-success">Not Required</span>
+      </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div style="display: flex; flex-direction: column; gap: 0.75rem;" class="no-print">
+      <button type="button" id="print-receipt-btn" class="btn btn-primary btn-lg">
+        🖨️ Print / Download Receipt
+      </button>
+      <a href="/" class="btn btn-secondary">
+        ← Back to Library Home
+      </a>
+    </div>
+  </div>
+
+  <script src="/js/utils.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const txId = urlParams.get('txId');
+
+      if (txId) {
+        document.getElementById('succ-tx-id').textContent = txId;
+
+        try {
+          const res = await fetch(`/api/transactions/${txId}`);
+          const data = await res.json();
+
+          if (data.success && data.transaction) {
+            const t = data.transaction;
+            document.getElementById('succ-customer').textContent = `${t.memberName} (${t.memberPhone})`;
+            document.getElementById('succ-book').textContent = t.bookName;
+            document.getElementById('succ-type').textContent = t.type;
+            document.getElementById('succ-type').className = `badge ${t.type === 'RENT' ? 'badge-primary' : 'badge-success'}`;
+
+            if (t.type === 'RENT') {
+              document.getElementById('succ-duration').textContent = `${t.rentalDuration} Days`;
+              document.getElementById('succ-due').textContent = formatDate(t.rentalDueDate);
+            } else {
+              document.getElementById('succ-duration-row').style.display = 'none';
+              document.getElementById('succ-due-row').style.display = 'none';
+            }
+
+            document.getElementById('succ-amount').textContent = formatCurrency(t.amount);
+            document.getElementById('succ-payment-status').textContent = t.paymentStatus.replace('_', ' ');
+          }
+        } catch (e) {
+          console.warn('Receipt fetch note:', e);
+        }
+      }
+
+      document.getElementById('print-receipt-btn').addEventListener('click', () => {
+        window.print();
+      });
+    });
+  </script>
+</body>
+</html>

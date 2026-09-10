@@ -1,0 +1,33 @@
+{
+  "name": "library-management-system",
+  "version": "1.0.0",
+  "description": "Production-Ready Library Management & QR-Based Book Rental Web Application",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "seed": "node seed.js",
+    "test-db": "node test-db.js"
+  },
+  "keywords": [
+    "library",
+    "qr-rental",
+    "firebase-auth",
+    "mongodb-atlas",
+    "vercel-serverless"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "cloudinary": "^1.41.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "firebase-admin": "^12.0.0",
+    "jsonwebtoken": "^9.0.2",
+    "jwks-rsa": "^3.1.0",
+    "mongoose": "^8.3.1",
+    "multer": "^1.4.5-lts.1",
+    "qrcode": "^1.5.3"
+  }
+}

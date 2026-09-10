@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Active Rentals & Returns | Central City Library</title>
+  <link rel="stylesheet" href="/css/global.css">
+  <link rel="stylesheet" href="/css/dashboard.css">
+  <link rel="stylesheet" href="/css/forms.css">
+  <link rel="stylesheet" href="/css/tables.css">
+  <link rel="stylesheet" href="/css/responsive.css">
+</head>
+<body>
+  <div class="app-layout">
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="brand-icon">📚</div>
+        <div class="brand-text">CityLibrary OS</div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="nav-category">Main Menu</div>
+        <a href="/dashboard.html" class="nav-link">
+          <span class="nav-icon">📊</span> Dashboard
+        </a>
+        <a href="/books.html" class="nav-link">
+          <span class="nav-icon">📚</span> Books Catalog
+        </a>
+        <a href="/members.html" class="nav-link">
+          <span class="nav-icon">👥</span> Members
+        </a>
+
+        <div class="nav-category">Operations</div>
+        <a href="/qr.html" class="nav-link">
+          <span class="nav-icon">📱</span> Generate QR
+        </a>
+        <a href="/rentals.html" class="nav-link active">
+          <span class="nav-icon">📖</span> Active Rentals
+        </a>
+        <a href="/transactions.html" class="nav-link">
+          <span class="nav-icon">💳</span> Transactions
+        </a>
+
+        <div class="nav-category">Configuration</div>
+        <a href="/settings.html" class="nav-link">
+          <span class="nav-icon">⚙️</span> Settings & UPI
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <button id="logout-btn" class="btn btn-secondary" style="width: 100%;">
+          🚪 Sign Out
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <div class="main-wrapper">
+      <header class="topbar">
+        <div class="topbar-left">
+          <button id="mobile-nav-toggle" class="mobile-nav-toggle" aria-label="Toggle Navigation">☰</button>
+          <h1 class="page-header-title">Book Lending & Return Tracker</h1>
+        </div>
+        <div class="topbar-right">
+          <div class="admin-profile-pill">
+            <div id="admin-avatar-initial" class="admin-avatar">A</div>
+            <span id="admin-email-display" class="admin-email-text">admin@library.org</span>
+          </div>
+        </div>
+      </header>
+
+      <main class="content-body">
+        <div class="table-toolbar">
+          <div class="table-toolbar-left">
+            <div class="search-wrapper" style="flex: 1;">
+              <span class="search-icon">🔍</span>
+              <input type="text" id="rental-search" class="form-control search-input" placeholder="Search by customer, phone, book, or ID..." />
+            </div>
+            <select id="rental-status-filter" class="form-control" style="width: 160px;">
+              <option value="ALL">All Rentals</option>
+              <option value="ACTIVE">Active Lending</option>
+              <option value="DUE_SOON">Due Soon (≤ 2 days)</option>
+              <option value="OVERDUE">Overdue Books</option>
+              <option value="RETURNED">Returned History</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="table-container">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Customer</th>
+                <th>Book Details</th>
+                <th>Start Date</th>
+                <th>Due Date</th>
+                <th>Days Remaining</th>
+                <th>Status</th>
+                <th>Return Action</th>
+              </tr>
+            </thead>
+            <tbody id="rentals-tbody">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+
+          <div class="pagination-wrapper">
+            <div id="pagination-info" class="pagination-info">Loading rentals...</div>
+            <div class="pagination-controls">
+              <button id="prev-page-btn" class="pagination-btn" disabled>← Previous</button>
+              <span id="page-indicator" class="pagination-page-indicator">Page 1</span>
+              <button id="next-page-btn" class="pagination-btn" disabled>Next →</button>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div id="toast-container"></div>
+
+  <!-- Scripts -->
+  <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-auth-compat.js"></script>
+  <script src="/js/firebase-config.js"></script>
+  <script src="/js/utils.js"></script>
+  <script src="/js/api.js"></script>
+  <script src="/js/guards.js"></script>
+  <script src="/js/rentals.js"></script>
+</body>
+</html>

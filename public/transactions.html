@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Transactions Ledger | Central City Library</title>
+  <link rel="stylesheet" href="/css/global.css">
+  <link rel="stylesheet" href="/css/dashboard.css">
+  <link rel="stylesheet" href="/css/forms.css">
+  <link rel="stylesheet" href="/css/tables.css">
+  <link rel="stylesheet" href="/css/responsive.css">
+</head>
+<body>
+  <div class="app-layout">
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="brand-icon">📚</div>
+        <div class="brand-text">CityLibrary OS</div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="nav-category">Main Menu</div>
+        <a href="/dashboard.html" class="nav-link">
+          <span class="nav-icon">📊</span> Dashboard
+        </a>
+        <a href="/books.html" class="nav-link">
+          <span class="nav-icon">📚</span> Books Catalog
+        </a>
+        <a href="/members.html" class="nav-link">
+          <span class="nav-icon">👥</span> Members
+        </a>
+
+        <div class="nav-category">Operations</div>
+        <a href="/qr.html" class="nav-link">
+          <span class="nav-icon">📱</span> Generate QR
+        </a>
+        <a href="/rentals.html" class="nav-link">
+          <span class="nav-icon">📖</span> Active Rentals
+        </a>
+        <a href="/transactions.html" class="nav-link active">
+          <span class="nav-icon">💳</span> Transactions
+        </a>
+
+        <div class="nav-category">Configuration</div>
+        <a href="/settings.html" class="nav-link">
+          <span class="nav-icon">⚙️</span> Settings & UPI
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <button id="logout-btn" class="btn btn-secondary" style="width: 100%;">
+          🚪 Sign Out
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <div class="main-wrapper">
+      <header class="topbar">
+        <div class="topbar-left">
+          <button id="mobile-nav-toggle" class="mobile-nav-toggle" aria-label="Toggle Navigation">☰</button>
+          <h1 class="page-header-title">Transactions Ledger</h1>
+        </div>
+        <div class="topbar-right">
+          <div class="admin-profile-pill">
+            <div id="admin-avatar-initial" class="admin-avatar">A</div>
+            <span id="admin-email-display" class="admin-email-text">admin@library.org</span>
+          </div>
+        </div>
+      </header>
+
+      <main class="content-body">
+        <!-- Toolbar Filters -->
+        <div class="table-toolbar">
+          <div class="table-toolbar-left">
+            <div class="search-wrapper" style="flex: 1;">
+              <span class="search-icon">🔍</span>
+              <input type="text" id="tx-search" class="form-control search-input" placeholder="Search by customer, phone, book, or Transaction ID..." />
+            </div>
+            <select id="tx-type-filter" class="form-control" style="width: 120px;">
+              <option value="All">All Types</option>
+              <option value="BUY">BUY</option>
+              <option value="RENT">RENT</option>
+            </select>
+            <select id="tx-status-filter" class="form-control" style="width: 140px;">
+              <option value="All">All Rental Status</option>
+              <option value="Active">Active</option>
+              <option value="Returned">Returned</option>
+              <option value="Overdue">Overdue</option>
+            </select>
+            <select id="tx-payment-filter" class="form-control" style="width: 160px;">
+              <option value="All">All Payments</option>
+              <option value="VERIFIED">Verified</option>
+              <option value="CUSTOMER_MARKED_PAID">Marked Paid (UTR)</option>
+              <option value="PENDING">Pending</option>
+              <option value="NOT_REQUIRED">Not Required</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Transactions Table -->
+        <div class="table-container">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Tx ID</th>
+                <th>Customer</th>
+                <th>Book Title</th>
+                <th>Type</th>
+                <th>Date</th>
+                <th>Due Date</th>
+                <th>Amount</th>
+                <th>Payment</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="transactions-tbody">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+
+          <div class="pagination-wrapper">
+            <div id="pagination-info" class="pagination-info">Loading ledger...</div>
+            <div class="pagination-controls">
+              <button id="prev-page-btn" class="pagination-btn" disabled>← Previous</button>
+              <span id="page-indicator" class="pagination-page-indicator">Page 1</span>
+              <button id="next-page-btn" class="pagination-btn" disabled>Next →</button>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Receipt Modal -->
+  <div id="receipt-modal" class="modal-backdrop">
+    <div class="modal-content" style="max-width: 500px;">
+      <div class="modal-header no-print">
+        <h3 class="modal-title">Transaction Receipt</h3>
+        <button type="button" class="modal-close" onclick="closeModal('receipt-modal')">×</button>
+      </div>
+
+      <div class="modal-body receipt-container" style="background: white;">
+        <div style="text-align: center; margin-bottom: 1.5rem; border-bottom: 2px dashed #cbd5e1; padding-bottom: 1rem;">
+          <h2 id="rec-library-name" style="font-size: 1.25rem; font-weight: 800;">Central City Library</h2>
+          <p id="rec-library-contact" style="font-size: 0.75rem; color: var(--text-muted);">+91 98765 43210 | contact@library.org</p>
+          <div style="margin-top: 0.5rem; font-weight: 700; font-size: 0.875rem; color: var(--primary);" id="rec-id">LIB-XXXXXXXX</div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 0.625rem; font-size: 0.875rem; margin-bottom: 1.5rem;">
+          <div style="display: flex; justify-content: space-between;">
+            <span style="color: var(--text-muted);">Date & Time:</span>
+            <strong id="rec-date">—</strong>
+          </div>
+          <div style="display: flex; justify-content: space-between;">
+            <span style="color: var(--text-muted);">Customer:</span>
+            <strong id="rec-customer">—</strong>
+          </div>
+          <div style="display: flex; justify-content: space-between;">
+            <span style="color: var(--text-muted);">Book Title:</span>
+            <strong id="rec-book">—</strong>
+          </div>
+          <div style="display: flex; justify-content: space-between;">
+            <span style="color: var(--text-muted);">Transaction Type:</span>
+            <strong id="rec-type">—</strong>
+          </div>
+          <div style="display: flex; justify-content: space-between;">
+            <span style="color: var(--text-muted);">Rental Duration:</span>
+            <span id="rec-duration">—</span>
+          </div>
+          <div style="display: flex; justify-content: space-between;">
+            <span style="color: var(--text-muted);">Return Due Date:</span>
+            <strong id="rec-due" style="color: var(--danger);">—</strong>
+          </div>
+          <div style="display: flex; justify-content: space-between; border-top: 1px solid var(--border-subtle); padding-top: 0.625rem;">
+            <span style="color: var(--text-muted);">Payment Status:</span>
+            <span id="rec-payment-status" class="badge badge-success">Paid</span>
+          </div>
+        </div>
+
+        <div style="background: var(--bg-subtle); padding: 1rem; border-radius: var(--radius-md); display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem;">
+          <span style="font-weight: 700; font-size: 1rem;">Total Amount</span>
+          <span id="rec-amount" style="font-size: 1.5rem; font-weight: 800; color: var(--primary);">₹0</span>
+        </div>
+
+        <div style="text-align: center; font-size: 0.75rem; color: var(--text-muted); border-top: 1px dashed #cbd5e1; padding-top: 0.75rem;">
+          Thank you for reading with us! Please return books before the due date.
+        </div>
+      </div>
+
+      <div class="modal-footer no-print">
+        <button type="button" class="btn btn-secondary" onclick="closeModal('receipt-modal')">Close</button>
+        <button type="button" id="print-receipt-btn" class="btn btn-primary">🖨️ Print Receipt</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div id="toast-container"></div>
+
+  <!-- Scripts -->
+  <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-auth-compat.js"></script>
+  <script src="/js/firebase-config.js"></script>
+  <script src="/js/utils.js"></script>
+  <script src="/js/api.js"></script>
+  <script src="/js/guards.js"></script>
+  <script src="/js/transactions.js"></script>
+</body>
+</html>

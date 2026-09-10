@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Library & Payment Settings | Central City Library</title>
+  <link rel="stylesheet" href="/css/global.css">
+  <link rel="stylesheet" href="/css/dashboard.css">
+  <link rel="stylesheet" href="/css/forms.css">
+  <link rel="stylesheet" href="/css/responsive.css">
+</head>
+<body>
+  <div class="app-layout">
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="brand-icon">📚</div>
+        <div class="brand-text">CityLibrary OS</div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="nav-category">Main Menu</div>
+        <a href="/dashboard.html" class="nav-link">
+          <span class="nav-icon">📊</span> Dashboard
+        </a>
+        <a href="/books.html" class="nav-link">
+          <span class="nav-icon">📚</span> Books Catalog
+        </a>
+        <a href="/members.html" class="nav-link">
+          <span class="nav-icon">👥</span> Members
+        </a>
+
+        <div class="nav-category">Operations</div>
+        <a href="/qr.html" class="nav-link">
+          <span class="nav-icon">📱</span> Generate QR
+        </a>
+        <a href="/rentals.html" class="nav-link">
+          <span class="nav-icon">📖</span> Active Rentals
+        </a>
+        <a href="/transactions.html" class="nav-link">
+          <span class="nav-icon">💳</span> Transactions
+        </a>
+
+        <div class="nav-category">Configuration</div>
+        <a href="/settings.html" class="nav-link active">
+          <span class="nav-icon">⚙️</span> Settings & UPI
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <button id="logout-btn" class="btn btn-secondary" style="width: 100%;">
+          🚪 Sign Out
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <div class="main-wrapper">
+      <header class="topbar">
+        <div class="topbar-left">
+          <button id="mobile-nav-toggle" class="mobile-nav-toggle" aria-label="Toggle Navigation">☰</button>
+          <h1 class="page-header-title">Library & Payment Configuration</h1>
+        </div>
+        <div class="topbar-right">
+          <div class="admin-profile-pill">
+            <div id="admin-avatar-initial" class="admin-avatar">A</div>
+            <span id="admin-email-display" class="admin-email-text">admin@library.org</span>
+          </div>
+        </div>
+      </header>
+
+      <main class="content-body" style="max-width: 860px;">
+        <form id="settings-form">
+          <!-- Section 1: Library Info -->
+          <div class="card" style="margin-bottom: 1.5rem;">
+            <div class="card-header">
+              <h3 class="card-title">🏢 Library Information</h3>
+            </div>
+            <div class="card-body">
+              <div class="form-group">
+                <label class="form-label">Library Name <span class="required">*</span></label>
+                <input type="text" id="library-name" class="form-control" placeholder="Central City Library" required />
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Physical Address</label>
+                <input type="text" id="library-address" class="form-control" placeholder="100 Knowledge Boulevard, Suite 400" />
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label">Contact Phone</label>
+                  <input type="text" id="library-phone" class="form-control" placeholder="+91 98765 43210" />
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Contact Email</label>
+                  <input type="email" id="library-email" class="form-control" placeholder="admin@library.org" />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Section 2: Rental Rules -->
+          <div class="card" style="margin-bottom: 1.5rem;">
+            <div class="card-header">
+              <h3 class="card-title">📖 Rental & QR Rules</h3>
+            </div>
+            <div class="card-body">
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label">Default Rental Duration (Days)</label>
+                  <input type="number" id="default-duration" class="form-control" min="1" max="60" value="7" />
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Maximum Duration (Days)</label>
+                  <input type="number" id="max-duration" class="form-control" min="1" max="180" value="30" />
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Grace Period (Days)</label>
+                  <input type="number" id="grace-period" class="form-control" min="0" max="14" value="2" />
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">QR Session Expiration Time (Minutes)</label>
+                <input type="number" id="qr-expiry" class="form-control" min="1" max="120" value="15" />
+                <small style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.25rem;">
+                  QR codes expire automatically after this duration to prevent unauthorized re-use.
+                </small>
+              </div>
+            </div>
+          </div>
+
+          <!-- Section 3: UPI Payments -->
+          <div class="card" style="margin-bottom: 2rem;">
+            <div class="card-header">
+              <div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
+                <h3 class="card-title">💳 UPI Payment Settings</h3>
+                <label class="switch-label">
+                  <span style="font-size: 0.8125rem; font-weight: 600; margin-right: 0.5rem;">Enable UPI Payments</span>
+                  <div class="switch">
+                    <input type="checkbox" id="upi-enabled-toggle" checked />
+                    <span class="slider"></span>
+                  </div>
+                </label>
+              </div>
+            </div>
+
+            <div id="upi-fields-container" class="card-body">
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label">Library UPI ID / VPA</label>
+                  <input type="text" id="upi-id" class="form-control" placeholder="library@upi or 9876543210@paytm" />
+                </div>
+                <div class="form-group">
+                  <label class="form-label">UPI Merchant / Display Name</label>
+                  <input type="text" id="upi-name" class="form-control" placeholder="Central City Library" />
+                </div>
+              </div>
+
+              <!-- UPI QR Code Upload -->
+              <div class="form-group">
+                <label class="form-label">Library UPI QR Image (Optional)</label>
+                <div class="file-dropzone" onclick="document.getElementById('upi-qr-input').click()">
+                  <div class="file-dropzone-icon">📷</div>
+                  <div class="file-dropzone-text">Click to upload your custom UPI QR code image</div>
+                  <div class="file-dropzone-sub">PNG, JPG up to 5MB (Uploaded to Cloudinary)</div>
+                  <input type="file" id="upi-qr-input" accept="image/*" style="display: none;" />
+                </div>
+
+                <div id="upi-qr-preview-box" class="image-preview-box">
+                  <img id="upi-qr-preview-img" src="" alt="UPI QR Preview" />
+                  <button type="button" id="remove-upi-qr-btn" class="image-preview-remove">✕</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Save Button -->
+          <div style="display: flex; justify-content: flex-end;">
+            <button type="submit" id="save-settings-btn" class="btn btn-primary btn-lg">
+              💾 Save All Settings
+            </button>
+          </div>
+        </form>
+      </main>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div id="toast-container"></div>
+
+  <!-- Scripts -->
+  <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-auth-compat.js"></script>
+  <script src="/js/firebase-config.js"></script>
+  <script src="/js/utils.js"></script>
+  <script src="/js/api.js"></script>
+  <script src="/js/guards.js"></script>
+  <script src="/js/settings.js"></script>
+</body>
+</html>
